@@ -1,0 +1,7 @@
+{
+    "env": {
+            "__DEV__": "true",
+            "TOKEN_KEY": "simplesecret",
+            "MONGO_URL": "mongodb+srv://hworld2827:asdflkj4565@cluster0-lp88u.mongodb.net/test?retryWrites=true"
+        }
+}
