@@ -1,30 +1,29 @@
 const {PythonShell} = require('python-shell');
-const multer = require('multer');
-const upload = multer({dest: './server/uploads/gdrive/'});
 
-
-module.exports = (upload.single('filename'), (req, res, next)=>{
-    let myPythonScriptPath = '/home/anmolmiddha/Projects/coreshare/server/api/python/sample.py';
-    console.log("from encrypt");
-    console.log(req.file);
+module.exports = function (req, res, next){
+try{
+    let myPythonScriptPath = '/home/anmolmiddha/Projects/coreshare/server/api/python/encrypt.py';
     const pyshell = new PythonShell(myPythonScriptPath);
-    const filepath = req.file.path;
-
-    pyshell.send(filepath);
+    let path = req.file.path;  
+    pyshell.send(path);
+    req.filepath = path;
     
-    pyshell.on('message', function (message) {
-        // received a message sent from the Python script (a simple "print" statement)
-        console.log(message);
-    });
-
+    pyshell.on("message", function(data){
+        req.filepath = data;
+        
+    })
     // end the input stream and allow the process to exit
     pyshell.end(function (err) {
-        if (err){
-            throw err;
-        };
-
-        console.log('finished');
-
+        if(err){
+            res.status(500).json(err);
+        }
     });
+
     next();
-});
+}
+catch(error) {
+    return res.status(401).json({
+        message: "Invalid token Auth failed"
+    })
+}
+}

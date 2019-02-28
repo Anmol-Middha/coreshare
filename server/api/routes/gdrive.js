@@ -10,12 +10,11 @@ const Encrypt = require('../middleware/encrypt.js');
 
 router.post('/upload', Authorise, upload.single('filename'), Encrypt, (req, res)=>{
     const auth = req.auth;
-    const document = req.file;
+    const document = req.filepath;
     const drive = google.drive({version: 'v3', auth});
-    let fileMetadata = {'name': document.originalname};
+    let fileMetadata = {name: (req.file.originalname).split(".")[0]};
     let media = {
-        mimeType : document.mimetype,
-        body: fs.createReadStream("/home/anmolmiddha/Projects/coreshare/server/uploads/gdrive/83aab2d66ae46bb282e6098dc453d91f")
+        body: fs.createReadStream(document)
     };
     drive.files.create({
         resource: fileMetadata,
@@ -32,15 +31,16 @@ router.post('/upload', Authorise, upload.single('filename'), Encrypt, (req, res)
 });
 
 router.get('/share/:fileid', Authorise, (req, res) =>{
+    const receiver = req.body.recemail;
     const auth = req.auth;
-    console.log(auth);
     const fileId = req.params.fileid;
-    const dest = fs.createWriteStream('./server/tempshare/gdrive/photo.png');
+    const dest = fs.createWriteStream('./server/tempshare/gdrive/input.txt');
     const drive = google.drive({version: 'v3', auth});
     drive.files.get({
         fileId: fileId,
         alt: 'media'
     }, {responseType: 'stream'}, function(err, rslt){
+        console.log(rslt);
         rslt.data.on('end', (rslt)=>{
             res.status(200).json(rslt);
         })
@@ -50,7 +50,6 @@ router.get('/share/:fileid', Authorise, (req, res) =>{
         .pipe(dest);
     });
 });
-
 
 router.post('/accept', Authorise, upload.single('sharedfile'), (req, res)=>{
     const auth = req.auth;
