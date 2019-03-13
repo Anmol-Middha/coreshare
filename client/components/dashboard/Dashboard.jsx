@@ -2,10 +2,28 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {logoutUser} from "./../../actions/authActions.js";
+import {syncCloud} from "./../../actions/cloudActions.js";
 class Dashboard extends Component {
   constructor(){
     super();
+    this.state = {
+      cloudType: "gdrive",
+    };
     this.onLogoutClick = this.onLogoutClick.bind(this);
+    this.onOptionSelect = this.onOptionSelect.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+  onOptionSelect(e){
+    this.setState({
+      cloudType: e.target.value
+    })
+  }
+  onSubmit(e){
+    e.preventDefault();
+    let cloud = {
+      cloudType: this.state.cloudType
+    };
+    this.props.syncCloud(cloud, this.props.history);
   }
   onLogoutClick(e){
     e.preventDefault();
@@ -17,25 +35,24 @@ return (
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row">
           <div className="col s12 center-align">
-            <h4>
-              {/* <b>Hey there,</b> {user.name.split(" ")[0]} */}
-              <p className="flow-text grey-text text-darken-1">
-                You are logged into a full-stack{" "}
-                <span style={{ fontFamily: "monospace" }}>MERN</span> app 👏
-              </p>
-            </h4>
             <button
-              style={{
-                width: "150px",
-                borderRadius: "3px",
-                letterSpacing: "1.5px",
-                marginTop: "1rem"
-              }}
               onClick={this.onLogoutClick}
               className="btn btn-large waves-effect waves-light hoverable blue accent-3"
             >
               Logout
             </button>
+            <fieldset>
+              <form noValidate onSubmit = {this.onSubmit}>
+              <div>
+                <label>Select Cloud</label>
+                <select onChange={this.onOptionSelect} value={this.state.cloudType}>
+                  <option value="gdrive">Googel Drive</option>
+                  <option value="mbox">Dropbox</option>
+                </select>
+              </div>
+              <button type="submit">Synchronize</button>
+              </form>
+            </fieldset>
           </div>
         </div>
       </div>
@@ -47,9 +64,10 @@ Dashboard.propTypes = {
   auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  cloud: state.cloud
 });
 export default connect(
   mapStateToProps,
-  { logoutUser }
+  { logoutUser, syncCloud }
 )(Dashboard);

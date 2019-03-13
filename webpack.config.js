@@ -5,8 +5,8 @@ module.exports = {
  entry: './client/index.js',
  output: {
   path: path.join(__dirname, 'client'),
-  filename: 'bundle.js'
- },
+  filename: 'bundle.js',
+},
  module: {
   rules: [{
    test: /.jsx?$/,
@@ -16,5 +16,5 @@ module.exports = {
     presets: ['@babel/preset-env', '@babel/preset-react']
    }
   }]
- }
+ },
 }

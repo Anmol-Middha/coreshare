@@ -27,7 +27,7 @@ export const loginUser = (userData, history) => dispatch => {
         localStorage.setItem("jwtToken", token);
         setAuthToken(token);
         const decoded = jwt_decode(token);
-        dispatch(setCurrentUser(decoded))
+        dispatch(setCurrentUser(decoded));
     })
     .catch(err => {
         dispatch({
@@ -61,5 +61,5 @@ export const logoutUser = (history) => dispatch => {
     localStorage.removeItem("jwtToken");
     setAuthToken(false);
     dispatch(setCurrentUser({}));
-    history.push('/');
+    // history.push('/');
 }

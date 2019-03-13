@@ -48,6 +48,7 @@ onSubmit(e){
     password: this.state.password
   };
   this.props.loginUser(userData, this.props.history);
+ 
 }
 
 openModal(){
@@ -75,7 +76,7 @@ render(){
         <label htmlFor="email">Email:</label>
         <input type="text" id="email" name="email" value={this.state.email} onChange={this.handleChangeEvent}></input>
         <label htmlFor="amount">Password:</label>
-        <input type="text" id="password" name="password" value={this.state.password} onChange={this.handleChangeEvent}></input>
+        <input type="password" id="password" name="password" value={this.state.password} onChange={this.handleChangeEvent}></input>
         <div className = "button-center">
         <br/>
         <button type="submit">Submit</button>

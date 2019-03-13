@@ -5,7 +5,6 @@ import { registerUser } from './../../actions/authActions.js';
 import { backToHome } from './../../actions/authActions.js';
 import { Link, withRouter } from "react-router-dom";
 import Modal from 'react-modal';
-import classnames from 'classnames';
 
 class Register extends React.Component {
 constructor() {
@@ -102,7 +101,7 @@ render(){
           <label htmlFor="email">Email:</label>
           <input type="text" id="nemail" name="nemail" value={this.state.nemail} onChange={this.handleChangeEvent}></input>
           <label htmlFor="amount">Password:</label>
-          <input type="text" id="npassword" name="npassword" value={this.state.npassword} onChange={this.handleChangeEvent}></input>
+          <input type="password" id="npassword" name="npassword" value={this.state.npassword} onChange={this.handleChangeEvent}></input>
           <div className = "button-center">
           <br/>
           <button type="submit">Submit</button>

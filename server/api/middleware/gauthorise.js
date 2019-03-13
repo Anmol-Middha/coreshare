@@ -6,7 +6,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = './server/token.json';
+const TOKEN_PATH = './client/token.json';
 const CREDENTIALS = './server/credentials.json';
 
 module.exports = (req, res, next) => {
