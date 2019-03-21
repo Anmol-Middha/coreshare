@@ -3,9 +3,10 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
-const upload = multer({dest: './server/uploads/gdrive/'});
-const {google} = require('googleapis');
 const mongoose = require('mongoose');
+const gridfs = require('gridfs-stream');
+const {google} = require('googleapis');
+const upload = multer({dest: './server/uploads/gdrive/'});
 
 const User = require('../../../models/user.js');
 const Authorise = require('../middleware/gauthorise.js');
@@ -16,7 +17,6 @@ router.post('/', Authorise, (req, res) => {
     const drive = google.drive({version: 'v3', auth});
     drive.files.list({
         q: "trashed=false",
-        pageSize: 10,
         fields: 'nextPageToken, files(id, name)',
         trashed: false
     }, (err, rslt) => {
@@ -51,25 +51,30 @@ router.post('/upload', Authorise, upload.single('filename'), Encrypt, (req, res)
     })
 });
 
-router.post('/share/:fileid', Authorise, (req, res) =>{
-    User.find({emailId: req.body.toemail},{email: 0, password: 0})
+router.post('/share/:fileId', Authorise, (req, res) =>{
+    const sid = req.body.senderId;
+    const filename = req.body.filename;
+    User.find({emailId: req.body.receiverEmail},{email: 0, password: 0})
     .exec()
     .then(user =>{
-        console.log(user);
         const auth = req.auth;
-        const fileId = req.params.fileid;
+        const fileId = req.params.fileId;
         const dest = fs.createWriteStream('./server/tempshare/gdrive/input.txt');
         const drive = google.drive({version: 'v3', auth});
         drive.files.get({
             fileId: fileId,
-            alt: 'media'
+            alt: 'media',
+            fields: '*'
         }, {responseType: 'stream'}, function(err, rslt){
             rslt.data.on('end', ()=>{
-                res.sendFile(path.join(__dirname, './../../tempshare/gdrive/input.txt'),
-                {headers:{
-                    receiverid:user[0]._id,
-                }
-                });
+                gridfs.mongo = mongoose.mongo;
+                let conn = mongoose.connection;
+                    let gfs = gridfs(conn.db);
+                    let writestream = gfs.createWriteStream({filename, metadata: {receiver: (user[0]._id).toString(), sender: sid}});
+                    fs.createReadStream('/home/anmolmiddha/Projects/coreshare/server/tempshare/gdrive/input.txt').pipe(writestream);
+                    writestream.on('close', function(file){
+                        res.send('file created:' + file.filename);
+                    });
             })
             .on('error', err=>{
                 res.status(500).json(err);

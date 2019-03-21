@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "./../../actions/authActions";
 import { Link, withRouter} from "react-router-dom";
-import Modal from 'react-modal';
+import { Modal, Button, Form} from 'react-bootstrap';
 
 class Login extends React.Component {
 constructor() {
@@ -66,23 +66,24 @@ closeModal(){
 render(){
   return(
     <div>
-      <button onClick={this.openModal}>Login</button>
-      <Modal isOpen = {this.state.modalIsOpen} onRequestClose = {this.closeModal} contentLabel = "Register" className="Modal">
-      <Link to= '/'>
-        <button onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></button>
-      </Link>
-      <fieldset>
-        <form noValidate onSubmit = {this.onSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input type="text" id="email" name="email" value={this.state.email} onChange={this.handleChangeEvent}></input>
-        <label htmlFor="amount">Password:</label>
-        <input type="password" id="password" name="password" value={this.state.password} onChange={this.handleChangeEvent}></input>
-        <div className = "button-center">
-        <br/>
-        <button type="submit">Submit</button>
-        </div>
-        </form>
-      </fieldset>
+      <Button onClick={this.openModal}>Login</Button>
+      <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Login</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form noValidate onSubmit = {this.onSubmit}>
+            <Form.Group>
+              <Form.Label>Email:</Form.Label>
+              <Form.Control type="text" id="email" name="email" value={this.state.email} onChange={this.handleChangeEvent}></Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password:</Form.Label>
+              <Form.Control type="password" id="password" name="password" value={this.state.password} onChange={this.handleChangeEvent}></Form.Control>
+            </Form.Group>
+            <Button type="submit">Submit</Button>
+          </Form>
+        </Modal.Body> 
       </Modal>
     </div>
   )

@@ -1,4 +1,4 @@
-import {SYNC_CLOUD, UPLOAD_FILE} from './../actions/types';
+import {SYNC_CLOUD, UPLOAD_FILE, SHARE_FILE} from './../actions/types';
 
 const initialState = {
     files: []
@@ -14,7 +14,7 @@ export default function(state=initialState, action){
         case UPLOAD_FILE: 
             return{
                 ...state,
-                files: state.files.concat(action.payload),
+                files: action.payload,
             };
         default: 
             return state;

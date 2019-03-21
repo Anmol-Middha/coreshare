@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import Modal from 'react-modal';
 import {connect} from "react-redux";
 import {logoutUser} from "./../../actions/authActions.js";
-import {syncCloud} from "./../../actions/cloudActions.js";
-import {uploadFile} from "./../../actions/cloudActions.js";
+import {syncCloud, uploadFile, shareFile} from "./../../actions/cloudActions.js";
+ 
 
 class Gdrive extends Component {
     constructor(){
@@ -13,7 +13,8 @@ class Gdrive extends Component {
         this.state={
             file: null,
             modalIsOpen: false,
-            toemail:""
+            receiverEmail:"",
+            sharingFile: [],
         }
         this.onFileChange = this.onFileChange.bind(this);
         this.onUpload = this.onUpload.bind(this);
@@ -41,12 +42,13 @@ class Gdrive extends Component {
     }
     emailChangeEvent(e){
         this.setState({
-            toemail: e.target.value
+            receiverEmail: e.target.value
         })
     }
-    openModal(){
+    openModal(e){
         this.setState({
-            modalIsOpen: true
+            modalIsOpen: true,
+            sharingFile: e.target.value
         })
     }
     closeModal(){
@@ -56,7 +58,7 @@ class Gdrive extends Component {
     }
     onShare(e){
         e.preventDefault();
-        socket.emit('send_file', this.state.toemail);
+        this.props.shareFile(this.state.sharingFile, this.state.receiverEmail);
     }
     render() {    
     return (
@@ -70,6 +72,7 @@ class Gdrive extends Component {
                         <tr>
                             <td>{file.id}</td>
                             <td>{file.name}</td>
+                            <td><button onClick={this.openModal} value={[file.id, file.name]}>Share</button></td>
                         </tr>
                     ))}
                 </tbody>
@@ -86,7 +89,6 @@ class Gdrive extends Component {
                 </div>
                 </form>
             </fieldset>
-            <button onClick={this.openModal}>Share</button>
             <Modal isOpen = {this.state.modalIsOpen} onRequestClose = {this.closeModal} contentLabel = "Register" className="Modal">
                 <Link to= '/dashboard/gdrive'>
                     <button onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></button>
@@ -94,7 +96,7 @@ class Gdrive extends Component {
                 <fieldset>
                     <form noValidate onSubmit = {this.onShare}>
                         <label htmlFor="email">Email:</label>
-                        <input type="text" id="toemail" name="toemail" value={this.state.toemail} onChange={this.emailChangeEvent}></input>
+                        <input type="text" id="receiverEmail" name="receiverEmail" value={this.state.receiverEmail} onChange={this.emailChangeEvent}></input>
                         <div>
                         <br/>
                         <button type="submit">Submit</button>
@@ -107,14 +109,14 @@ class Gdrive extends Component {
   }
 }
 Gdrive.propTypes = {
-    logoutUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
+    cloud: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
   };
 const mapStateToProps = state => ({
-    auth: state.auth,
-    cloud: state.cloud
+    cloud: state.cloud,
+    errors: state.errors
 });
 export default connect(
     mapStateToProps,
-    { logoutUser, syncCloud, uploadFile }
+    {syncCloud, uploadFile, shareFile}
   )(Gdrive);

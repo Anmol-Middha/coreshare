@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {logoutUser} from "./../../actions/authActions.js";
 import {syncCloud} from "./../../actions/cloudActions.js";
+import Navbar from "../layout/Navbar.jsx";
+
 class Dashboard extends Component {
   constructor(){
     super();
@@ -33,6 +35,8 @@ render() {
     const { user } = this.props.auth;
 return (
       <div style={{ height: "75vh" }} className="container valign-wrapper">
+        
+      <Navbar/>
         <div className="row">
           <div className="col s12 center-align">
             <button
@@ -65,7 +69,8 @@ Dashboard.propTypes = {
 };
 const mapStateToProps = state => ({
   auth: state.auth,
-  cloud: state.cloud
+  cloud: state.cloud,
+  errors: state.errors
 });
 export default connect(
   mapStateToProps,

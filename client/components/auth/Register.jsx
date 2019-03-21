@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { registerUser } from './../../actions/authActions.js'; 
 import { backToHome } from './../../actions/authActions.js';
 import { Link, withRouter } from "react-router-dom";
-import Modal from 'react-modal';
+import {Modal, Button, Form} from 'react-bootstrap';
 
 class Register extends React.Component {
 constructor() {
@@ -73,17 +73,21 @@ backToHome(){
 
 
 render(){
+
   if(this.props.auth.isRegistered){
     return(
       <div>
-        <button onClick={this.openModal}>Register</button>
-        <Modal isOpen = {this.state.modalIsOpen} onRequestClose = {this.closeModal} contentLabel = "Successfully Regitstered" className ="Modal">
-          <div>
+      <Button variant="primary" onClick={this.openModal}>Register</Button>
+        <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Welcome To Coreshare, Register</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <h3>You have successfully registered<br/>Login to Continue</h3>
-            <Link to="/">
-              <button onClick = {this.backToHome}>Back to Homepage</button>
-            </Link>
-          </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick = {this.backToHome}>Back to Homepage</Button>
+          </Modal.Footer>
         </Modal>
       </div>
     )
@@ -91,26 +95,27 @@ render(){
   else{
     return(
       <div>
-        <button onClick={this.openModal}>Register</button>
-        <Modal isOpen = {this.state.modalIsOpen} onRequestClose = {this.closeModal} contentLabel = "Register" className="Modal">
-        <Link to= '/'>
-          <button onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></button>
-        </Link>
-        <fieldset>
-          <form noValidate onSubmit = {this.onSubmit}>
-          <label htmlFor="email">Email:</label>
-          <input type="text" id="nemail" name="nemail" value={this.state.nemail} onChange={this.handleChangeEvent}></input>
-          <label htmlFor="amount">Password:</label>
-          <input type="password" id="npassword" name="npassword" value={this.state.npassword} onChange={this.handleChangeEvent}></input>
-          <div className = "button-center">
-          <br/>
-          <button type="submit">Submit</button>
-          </div>
-          </form>
-        </fieldset>
-       
+      <Button variant="primary" onClick={this.openModal}>Register</Button>
+        <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Welcome To Coreshare, Register</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form noValidate onSubmit = {this.onSubmit}>
+              <Form.Group>
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="text" id="nemail" name="nemail" value={this.state.nemail} onChange={this.handleChangeEvent}></Form.Control>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" id="npassword" name="npassword" value={this.state.npassword} onChange={this.handleChangeEvent}></Form.Control>
+              </Form.Group>
+              <Button type="submit">Submit</Button>
+            </Form>
+          </Modal.Body>
         </Modal>
       </div>
+      
     )
   }
   
