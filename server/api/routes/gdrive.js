@@ -30,7 +30,7 @@ router.post('/', Authorise, (req, res) => {
     });
 });
 
-router.post('/upload', Authorise, upload.single('filename'), Encrypt, (req, res)=>{
+router.post('/upload', Authorise, upload.single('filename'),Encrypt, (req, res)=>{
     const auth = req.auth;
     const drive = google.drive({version: 'v3', auth});
     let fileMetadata = {name: req.file.originalname.split(".")[0]};
@@ -41,9 +41,10 @@ router.post('/upload', Authorise, upload.single('filename'), Encrypt, (req, res)
         resource: fileMetadata,
         media,
         fields: 'id, name'       
-    }, function(err, file){
+    },function(err, file){
         if(err){
             res.status(500).json(err);
+            console.log(err);
         }
         else{
             res.status(200).json({filename: file.data.name, fileid: file.data.id});
@@ -69,12 +70,12 @@ router.post('/share/:fileId', Authorise, (req, res) =>{
             rslt.data.on('end', ()=>{
                 gridfs.mongo = mongoose.mongo;
                 let conn = mongoose.connection;
-                    let gfs = gridfs(conn.db);
-                    let writestream = gfs.createWriteStream({filename, metadata: {receiver: (user[0]._id).toString(), sender: sid}});
-                    fs.createReadStream('/home/anmolmiddha/Projects/coreshare/server/tempshare/gdrive/input.txt').pipe(writestream);
-                    writestream.on('close', function(file){
-                        res.send('file created:' + file.filename);
-                    });
+                let gfs = gridfs(conn.db);
+                let writestream = gfs.createWriteStream({filename, metadata: {receiver: (user[0]._id).toString(), sender: sid}});
+                fs.createReadStream('/home/anmolmiddha/Projects/coreshare/server/tempshare/gdrive/input.txt').pipe(writestream);
+                writestream.on('close', function(file){
+                    res.send('file created:' + file.filename);
+                });
             })
             .on('error', err=>{
                 res.status(500).json(err);

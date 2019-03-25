@@ -1,0 +1,88 @@
+// #include<stdio.h>
+// void sort(int a[], int n){
+// int i, j, c;
+// for(i=0; i<n-1; i++){
+// 	for(j=0; j<n-i-1; j++){
+// 		if(a[j] > a[j+1]){
+// 			c = a[j+1];
+// 			a[j+1] = a[j];
+// 			a[j] = c;
+// 		}
+// 	}
+// }
+// }
+
+// int main(){
+// 	int n, a[100], i, j, c, l=0, r, x, m;
+// 	printf("enter the length of array");
+// 	scanf("%d", &n);
+// 	for(i = 0; i < n; i++){
+// 		scanf("%d", &a[i]);
+// 	}
+// 	printf("enter the element you want to search");
+// 	scanf("%d", &x);
+// 	sort(a, n);
+// 	r = n-1;
+// 	while(l <= r){
+// 		m = (l+(r-1))/2;
+// 		if(a[m] == x)
+// 			printf("The position of required element is %d", &m);
+// 		if (a[m] < x) 
+//   	          l = m + 1; 
+//         	else
+//         	    r = m - 1;
+//        } 	
+// }
+
+
+#include <stdio.h> 
+  
+int binarySearch(int arr[], int l, int r, int x) 
+{ 
+    if (r >= l) { 
+        int mid = l + (r - l) / 2; 
+  
+        
+        if (arr[mid] == x) 
+            return mid; 
+  
+       
+        if (arr[mid] > x) 
+            return binarySearch(arr, l, mid - 1, x); 
+  
+      
+        return binarySearch(arr, mid + 1, r, x); 
+    } 
+  
+    
+    return -1; 
+} 
+  
+int main(void) 
+{ 
+    int n, a[100], x, i, j, c;
+    printf("enter the length of array");
+	scanf("%d", &n);
+	for(i = 0; i < n; i++){
+		scanf("%d", &a[i]);
+	}
+	printf("enter the element you want to search");
+	scanf("%d", &x);
+
+
+    for(i=0; i<n-1; i++){
+        for(j=0; j<n-i-1; j++){
+            if(a[j] > a[j+1]){
+                c=a[j+1];
+                a[j+1] = a[j];
+                a[j] = c;
+            }
+        }
+    }
+     
+    int result = binarySearch(a, 0, n - 1, x); 
+    (result == -1) ? printf("Element is not present in array") 
+                   : printf("Element is present at index %d in sorted array", 
+                            result); 
+    return 0; 
+} 

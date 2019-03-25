@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Link, withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import Modal from 'react-modal';
+import {Modal, Form, Button} from 'react-bootstrap';
 import {connect} from "react-redux";
 import {logoutUser} from "./../../actions/authActions.js";
 import {syncCloud, uploadFile, shareFile} from "./../../actions/cloudActions.js";
- 
+import store from '../../store';
 
 class Gdrive extends Component {
     constructor(){
@@ -31,8 +31,10 @@ class Gdrive extends Component {
     }
     onUpload(e){
         e.preventDefault();
+        const uid = store.getState().auth.user._id;
         const data = new FormData();
         data.append('filename', this.state.file);
+        data.append('uid', uid);
         this.props.uploadFile(data);
     }
     handleCancelEvent(){
@@ -89,20 +91,20 @@ class Gdrive extends Component {
                 </div>
                 </form>
             </fieldset>
-            <Modal isOpen = {this.state.modalIsOpen} onRequestClose = {this.closeModal} contentLabel = "Register" className="Modal">
-                <Link to= '/dashboard/gdrive'>
-                    <button onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></button>
-                </Link>
-                <fieldset>
-                    <form noValidate onSubmit = {this.onShare}>
-                        <label htmlFor="email">Email:</label>
-                        <input type="text" id="receiverEmail" name="receiverEmail" value={this.state.receiverEmail} onChange={this.emailChangeEvent}></input>
-                        <div>
-                        <br/>
-                        <button type="submit">Submit</button>
-                        </div>
-                    </form>
-                </fieldset>
+            
+            <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Share File</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Form noValidate onSubmit = {this.onShare}>
+                    <Form.Group>
+                    <Form.Label>Email:</Form.Label>
+                    <Form.Control type="text" id="receiverEmail" name="receiverEmail" value={this.state.receiverEmail} onChange={this.emailChangeEvent}></Form.Control>
+                    </Form.Group>
+                    <Button type="submit">Submit</Button>
+                </Form>
+                </Modal.Body> 
             </Modal>
         </div>
     )

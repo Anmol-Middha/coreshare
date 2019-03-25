@@ -1,4 +1,4 @@
-import {GET_COUNT, LIST_NOTIFICATIONS} from './../actions/types';
+import {GET_COUNT, LIST_NOTIFICATIONS, IGNORE_NOTIFICATION} from './../actions/types';
 
 const initialState = {
     count: "",

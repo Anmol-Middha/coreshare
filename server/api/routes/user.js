@@ -4,8 +4,13 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const GenerateKey = require('../middleware/generatekey');
 const User = require('../../../models/user.js');
-router.post('/signup', (req, res, next) =>{
+
+router.post('/signup',  GenerateKey, (req,res) =>{
+    console.log(req.keys);
+    const keys = JSON.parse(req.keys);
+    
     bcrypt.hash(req.body.password, 10, (err, hash)=>{
         if(err){
             return res.status(500).json({
@@ -17,13 +22,18 @@ router.post('/signup', (req, res, next) =>{
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 emailId: req.body.email,
-                password: hash
+                password: hash,
+                privatekey: keys.bprivatekey,
+                publickey: keys.bpublickey,
+                signingkey: keys.bsigningkey,
+                verificationkey: keys.bverificationkey
             })
             .save()
             .then(rslt => {
                 res.status(201).json({
                     message: "User created"
                 });
+                req.rslt = rslt
             })
             .catch(err => {
                 res.status(500).json({
@@ -32,7 +42,7 @@ router.post('/signup', (req, res, next) =>{
                 });  
             });
         } 
-    });    
+    });
 }); 
 
 router.post('/login', (req, res, next)=> {

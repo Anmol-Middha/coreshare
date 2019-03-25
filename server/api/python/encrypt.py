@@ -1,8 +1,4 @@
-
-
-#1
-# Sets a default curve (secp256k1)
-import random, requests, sys, os
+import random, requests, sys, os, pickle
 from umbral import pre, keys, config, signing
 
 config.set_default_curve()
@@ -13,13 +9,6 @@ config.set_default_curve()
 # First, Let's generate two asymmetric key pairs for Alice:
 # A delegating key pair and a Signing key pair.
 
-alices_private_key = keys.UmbralPrivateKey.gen_key()
-alices_public_key = alices_private_key.get_pubkey()
-
-alices_signing_key = keys.UmbralPrivateKey.gen_key()
-alices_verifying_key = alices_signing_key.get_pubkey()
-alices_signer = signing.Signer(private_key=alices_signing_key)
-
 #3
 # Encrypt some data for Alice
 # ---------------------------
@@ -29,16 +18,75 @@ alices_signer = signing.Signer(private_key=alices_signing_key)
 # this operation.
 
 for data in sys.stdin:
-    path = os.getcwd() + "/" + data
+    path = os.getcwd() + "/" + str(data).split(',.,')[0]
+print((str(data).split(',.,')[1]).rstrip('\n'))
+key = keys.UmbralPublicKey.from_bytes(((str(data).split(',.,')[1]).rstrip('\n').encode('cp855'))) 
 
 rf = open(path.rstrip('\n'), "rb")
 plaintext = rf.read()
-ciphertext, capsule = pre.encrypt(alices_public_key, plaintext)
-# f.write(ciphertext, "w")
+ciphertext, capsule = pre.encrypt(key, plaintext)
+# # f.write(ciphertext, "w")
 
 wf = open(path.rstrip('\n'), "wb")
 wf.write(ciphertext)
-print(path)
+
+
+
+
+
+
+
+
+
+
+
+
+#1
+# Sets a default curve (secp256k1)
+# import random, requests, sys, os
+# from umbral import pre, keys, config, signing
+
+# config.set_default_curve()
+
+# #2
+# # Generate an Umbral key pair
+# # ---------------------------
+# # First, Let's generate two asymmetric key pairs for Alice:
+# # A delegating key pair and a Signing key pair.
+
+# alices_private_key = keys.UmbralPrivateKey.gen_key()
+# alices_public_key = alices_private_key.get_pubkey()
+# print(type(alices_public_key))
+# # alices_signing_key = keys.UmbralPrivateKey.gen_key()
+# # alices_verifying_key = alices_signing_key.get_pubkey()
+# # alices_signer = signing.Signer(private_key=alices_signing_key)
+
+# #3
+# # Encrypt some data for Alice
+# # ---------------------------
+# # Now let's encrypt data with Alice's public key.
+# # Invocation of `pre.encrypt` returns both the `ciphertext`,
+# # and a `capsule`. Anyone with Alice's public key can perform
+# # this operation.
+
+# for data in sys.stdin:
+#     print(data)
+
+# path = os.getcwd() + "/" + str(data).split(',')[0]
+# print(path)
+# ublic_key = str(data).split.(',')[1]
+
+# rf = open(path.rstrip('\n'), "rb")
+# plaintext = rf.read()
+# ciphertext, capsule = pre.encrypt(alices_public_key, plaintext)
+# # f.write(ciphertext, "w")
+
+# wf = open(path.rstrip('\n'), "wb")
+# wf.write(ciphertext)
+# print(path)
+# print(type(alices_private_key))
+# print(vars(alices_private_key))
+# print(type(alices_public_key))
 
 
 
