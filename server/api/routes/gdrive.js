@@ -9,6 +9,7 @@ const {google} = require('googleapis');
 const upload = multer({dest: './server/uploads/gdrive/'});
 
 const User = require('../../../models/user.js');
+const Capsule = require('../../../models/capsule');
 const Authorise = require('../middleware/gauthorise.js');
 const Encrypt = require('../middleware/encrypt.js');
 
@@ -37,6 +38,7 @@ router.post('/upload', Authorise, upload.single('filename'),Encrypt, (req, res)=
     let media = {
         body: fs.createReadStream(path.join(__dirname, '../../../', req.filepath))
     };
+    //uploading the file to google drive
     drive.files.create({
         resource: fileMetadata,
         media,
@@ -47,14 +49,30 @@ router.post('/upload', Authorise, upload.single('filename'),Encrypt, (req, res)=
             console.log(err);
         }
         else{
-            res.status(200).json({filename: file.data.name, fileid: file.data.id});
+            const capsule = new Capsule({
+                _id: file.data.id,
+                name: file.data.name,
+                capsule: req.capsule
+            })
+            .save()
+            .then(rslt => {
+                res.status(200).json({filename: rslt.name, fileid: rslt.id});
+            })
+            .catch(err => {
+                res.status(500).json({
+                    err,
+                    message: err.message
+                });  
+            });
         }
-    })
+    });
 });
 
 router.post('/share/:fileId', Authorise, (req, res) =>{
+    const fileid = req.params.fileId;
     const sid = req.body.senderId;
     const filename = req.body.filename;
+    
     User.find({emailId: req.body.receiverEmail},{email: 0, password: 0})
     .exec()
     .then(user =>{
@@ -71,7 +89,7 @@ router.post('/share/:fileId', Authorise, (req, res) =>{
                 gridfs.mongo = mongoose.mongo;
                 let conn = mongoose.connection;
                 let gfs = gridfs(conn.db);
-                let writestream = gfs.createWriteStream({filename, metadata: {receiver: (user[0]._id).toString(), sender: sid}});
+                let writestream = gfs.createWriteStream({filename, metadata: {receiver: (user[0]._id).toString(), sender: sid, cloudfileid: fileid}});
                 fs.createReadStream('/home/anmolmiddha/Projects/coreshare/server/tempshare/gdrive/input.txt').pipe(writestream);
                 writestream.on('close', function(file){
                     res.send('file created:' + file.filename);
@@ -88,27 +106,5 @@ router.post('/share/:fileId', Authorise, (req, res) =>{
     }) 
 });
 
-router.post('/accept', Authorise, upload.single('sharedfile'), (req, res)=>{
-    const auth = req.auth;
-    const document = req.file;
-    const drive = google.drive({version: 'v3', auth});
-    let fileMetadata = {'name': document.originalname};
-    let media = {
-        mimeType : document.mimetype,
-        body: fs.createReadStream(document.path)
-    };
-    drive.files.create({
-        resource: fileMetadata,
-        media,
-        fields: 'id'       
-    }, function(err, file){
-        if(err){
-            res.status(500).json(err);
-        }
-        else{
-            res.status(200).json(`file with id ${file.data.id} successfully uploaded on google drive`);
-        }
-    })
-});
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import {GET_COUNT, LIST_NOTIFICATIONS, IGNORE_NOTIFICATION, GET_ERRORS} from './types.js';
+import {GET_COUNT, LIST_NOTIFICATIONS, IGNORE_NOTIFICATION, GET_ERRORS, ACCEPT_NOTIFICATION} from './types.js';
 import axios from 'axios';
 import store from '../store';
 
@@ -34,8 +34,8 @@ export const listNotifications = () => dispatch => {
     });
 }
 
-export const ignoreNotification = (sharedFileId) => dispatch => {
-    axios.post('/notifications/ignore', {sfid: sharedFileId})
+export const ignoreNotification = (notificationId) => dispatch => {
+    axios.post('/notifications/ignore', {nfid: notificationId})
     .then(() => {
         axios.post('/notifications/count', {uid: store.getState().auth.user._id})
         .then(rslt=>{
@@ -58,4 +58,8 @@ export const ignoreNotification = (sharedFileId) => dispatch => {
             payload: err
         })
     })
+}
+
+export const acceptNotification = (notificationId) => dispatch => {
+    axios.post('/notifications/accept', {nfid: notificationId});
 }

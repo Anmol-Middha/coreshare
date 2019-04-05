@@ -4,7 +4,7 @@ import {Dropdown, Button} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {logoutUser} from "../../actions/authActions";
-import {getCount, listNotifications, ignoreNotification} from '../../actions/navActions';
+import {getCount, listNotifications, ignoreNotification, acceptNotification} from '../../actions/navActions';
 
 
 class Navbar extends Component {
@@ -14,7 +14,7 @@ class Navbar extends Component {
             
         }
         this.ignore = this.ignore.bind(this);
-        // this.accept = this.accept.bind(this);
+        this.accept = this.accept.bind(this);
     }
     componentDidMount(){
         this.props.getCount();
@@ -23,6 +23,9 @@ class Navbar extends Component {
     ignore(e){
         this.props.ignoreNotification(e.target.value);
     }   
+    accept(e){
+        this.props.acceptNotification(e.target.value);
+    }
     render() {
     return (
         <div>
@@ -33,8 +36,8 @@ class Navbar extends Component {
                 <Dropdown.Menu>
                     {this.props.nav.notifications.map(curr_notif =>( 
                         <Dropdown.Item>{curr_notif.message.toString()}
-                        <Button value={curr_notif.sharedFileId} onClick={this.accept}>Accept</Button>
-                        <Button value={curr_notif.sharedFileId} onClick={this.ignore}>Ignore</Button>
+                        <Button value={curr_notif.notificationId} onClick={this.accept}>Accept</Button>
+                        <Button value={curr_notif.notificationId} onClick={this.ignore}>Ignore</Button>
                         </Dropdown.Item>
                         )
                     )}
@@ -58,5 +61,5 @@ const mapStateToProps = state =>({
 })
 export default connect(
     mapStateToProps,
-    {logoutUser, getCount, listNotifications, ignoreNotification}
+    {logoutUser, getCount, listNotifications, ignoreNotification, acceptNotification}
 )(withRouter(Navbar))
