@@ -5,6 +5,11 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faShareSquare } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faShareSquare)
 
 import PrivateRoute from "./privateroutes";
 import Landing from "./components/layout/Landing.jsx";

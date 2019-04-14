@@ -84,6 +84,7 @@ router.post('/accept', function(req, res, next){
             .exec()
             .then(capsule => {
                 req.filecapsule = JSON.parse(capsule[0].capsule);
+                req.sharefilename = capsule[0].name;
             })
             .catch(err=>{
                 res.status(500).json(err);
@@ -110,6 +111,8 @@ router.post('/accept', function(req, res, next){
                 });
                 readstream.on("end", function () {
                    req.ciphertext = chunks;
+                   console.log(req.ciphertext);
+                   console.log(typeof(req.ciphertext));
                    next();
                 });
             })

@@ -66,7 +66,7 @@ closeModal(){
 render(){
   return(
     <div>
-      <Button onClick={this.openModal}>Login</Button>
+      <Button onClick={this.openModal} variant="outline-info">Login</Button>
       <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Login</Modal.Title>
@@ -81,7 +81,7 @@ render(){
               <Form.Label>Password:</Form.Label>
               <Form.Control type="password" id="password" name="password" value={this.state.password} onChange={this.handleChangeEvent}></Form.Control>
             </Form.Group>
-            <Button type="submit">Submit</Button>
+            <Button variant="info" type="submit">Submit</Button>
           </Form>
         </Modal.Body> 
       </Modal>

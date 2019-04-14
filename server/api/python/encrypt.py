@@ -11,15 +11,17 @@ key = keys.UmbralPublicKey.from_bytes(((str(data).split(',.,')[1]).rstrip('\n').
 
 rf = open(path.rstrip('\n'), "rb")
 plaintext = rf.read()
-# print(plaintext)
-# print(type(plaintext))
+print(plaintext)
 
 ciphertext, capsule = pre.encrypt(key, plaintext)
+print(ciphertext)
+print(vars(capsule))
+
 capsule_bytes = capsule.to_bytes().decode('cp855')
 json_capsule = json.dumps(capsule_bytes)
-# print(ciphertext)
-# print(type(ciphertext))
-# print(ciphertext.decode('cp855'))
+print(ciphertext)
+print(type(ciphertext.decode('cp855')))
+print(type(ciphertext))
 print(json_capsule)
 
 wf = open(path.rstrip('\n'), "w")

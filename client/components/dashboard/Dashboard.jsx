@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import {Button, Form, Row, Col} from 'react-bootstrap';
 import {connect} from "react-redux";
-import {logoutUser} from "./../../actions/authActions.js";
 import {syncCloud} from "./../../actions/cloudActions.js";
-import Navbar from "../layout/Navbar.jsx";
+import Navigation from "../layout/Navigation.jsx";
 
 class Dashboard extends Component {
   constructor(){
@@ -11,7 +11,6 @@ class Dashboard extends Component {
     this.state = {
       cloudType: "gdrive",
     };
-    this.onLogoutClick = this.onLogoutClick.bind(this);
     this.onOptionSelect = this.onOptionSelect.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -27,52 +26,42 @@ class Dashboard extends Component {
     };
     this.props.syncCloud(cloud, this.props.history);
   }
-  onLogoutClick(e){
-    e.preventDefault();
-    this.props.logoutUser(this.props.history);
-  };
-render() {
-    const { user } = this.props.auth;
-return (
-      <div style={{ height: "75vh" }} className="container valign-wrapper">
-        
-      <Navbar/>
-        <div className="row">
-          <div className="col s12 center-align">
-            <button
-              onClick={this.onLogoutClick}
-              className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-            >
-              Logout
-            </button>
-            <fieldset>
-              <form noValidate onSubmit = {this.onSubmit}>
-              <div>
-                <label>Select Cloud</label>
-                <select onChange={this.onOptionSelect} value={this.state.cloudType}>
-                  <option value="gdrive">Googel Drive</option>
-                  <option value="mbox">Dropbox</option>
-                </select>
-              </div>
-              <button type="submit">Synchronize</button>
-              </form>
-            </fieldset>
-          </div>
+  render() {
+  const { user } = this.props.auth;
+  return (
+    <div style={{height: "75vh", paddingTop: "80px"}} className="container valign-wrapper">
+      <Navigation/>
+        <div className = "row">
+              <Form noValidate onSubmit = {this.onSubmit}>
+              <Form.Label>Select Cloud</Form.Label>
+              <Row>
+              <Col xs={12}>
+              <Form.Control as="select" size="sm" onChange={this.onOptionSelect} value={this.state.cloudType}>
+                <option value="gdrive">Googel Drive</option>
+                <option value="mbox">Dropbox</option>
+              </Form.Control>
+              </Col>
+              </Row>
+              <br/>
+              <Button type="submit" variant="info">Synchronize</Button>
+              </Form>
         </div>
-      </div>
-    );
+    </div>
+  );
   }
 }
+
 Dashboard.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
+
 const mapStateToProps = state => ({
   auth: state.auth,
   cloud: state.cloud,
   errors: state.errors
 });
+
 export default connect(
   mapStateToProps,
-  { logoutUser, syncCloud }
+  { syncCloud }
 )(Dashboard);

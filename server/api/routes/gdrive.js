@@ -34,7 +34,7 @@ router.post('/', Authorise, (req, res) => {
 router.post('/upload', Authorise, upload.single('filename'),Encrypt, (req, res)=>{
     const auth = req.auth;
     const drive = google.drive({version: 'v3', auth});
-    let fileMetadata = {name: req.file.originalname.split(".")[0]};
+    let fileMetadata = {name: req.file.originalname};
     let media = {
         body: fs.createReadStream(path.join(__dirname, '../../../', req.filepath))
     };

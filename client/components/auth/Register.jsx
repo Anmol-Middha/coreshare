@@ -77,7 +77,7 @@ render(){
   if(this.props.auth.isRegistered){
     return(
       <div>
-      <Button variant="primary" onClick={this.openModal}>Register</Button>
+      <Button variant="outline-info" onClick={this.openModal}>Sign up</Button>
         <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
           <Modal.Header closeButton>
             <Modal.Title>Welcome To Coreshare, Register</Modal.Title>
@@ -86,7 +86,7 @@ render(){
             <h3>You have successfully registered<br/>Login to Continue</h3>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick = {this.backToHome}>Back to Homepage</Button>
+            <Button variant="info" onClick = {this.backToHome}>Back to Homepage</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -95,7 +95,7 @@ render(){
   else{
     return(
       <div>
-      <Button variant="primary" onClick={this.openModal}>Register</Button>
+      <Button onClick={this.openModal} variant="outline-info">Register</Button>
         <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
           <Modal.Header closeButton>
             <Modal.Title>Welcome To Coreshare, Register</Modal.Title>
@@ -110,7 +110,7 @@ render(){
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" id="npassword" name="npassword" value={this.state.npassword} onChange={this.handleChangeEvent}></Form.Control>
               </Form.Group>
-              <Button type="submit">Submit</Button>
+              <Button variant="info" type="submit">Submit</Button>
             </Form>
           </Modal.Body>
         </Modal>

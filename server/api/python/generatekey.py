@@ -8,6 +8,11 @@ public_key = private_key.get_pubkey()
 signing_key = keys.UmbralPrivateKey.gen_key()
 verification_key = signing_key.get_pubkey()
 
+# print(vars(private_key))
+# print(vars(public_key))
+# print(vars(signing_key))
+# print(vars(verification_key))
+
 user_key = {
     'bprivatekey': private_key.to_bytes().decode('cp855'),
     'bpublickey': public_key.to_bytes().decode('cp855'),

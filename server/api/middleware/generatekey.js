@@ -5,6 +5,7 @@ try{
     let myPythonScriptPath = '/home/anmolmiddha/Projects/coreshare/server/api/python/generatekey.py';
     const pyshell = new PythonShell(myPythonScriptPath);
     pyshell.on("message", function(data){
+        // console.log(data);
         req.keys = data
     });
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Link, withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import {Modal, Form, Button} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {Modal, Form, Button, Table, Row, Col} from 'react-bootstrap';
 import {connect} from "react-redux";
-import {logoutUser} from "./../../actions/authActions.js";
+import Navigation from "./../layout/Navigation.jsx";
 import {syncCloud, uploadFile, shareFile} from "./../../actions/cloudActions.js";
 import store from '../../store';
 
@@ -64,34 +64,41 @@ class Gdrive extends Component {
     }
     render() {    
     return (
-        <div>
-            <table>
-                <thead>
-                    <tr><th>fileid</th><th>filename</th></tr>
-                </thead>
-                <tbody>
-                    {this.props.cloud.files.map(file =>(
-                        <tr>
-                            <td>{file.id}</td>
-                            <td>{file.name}</td>
-                            <td><button onClick={this.openModal} value={[file.id, file.name]}>Share</button></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <fieldset>
-                <form noValidate onSubmit={this.onUpload}>
-                <div>
-                    <label>filename</label>
-                    <input type="file" onChange={this.onFileChange} name= "filename"></input>
-                </div>
-                <div>
-                    <button type="submit">Upload</button> 
-                    <button onClick={this.handleCancelEvent}>Cancel</button>
-                </div>
-                </form>
-            </fieldset>
-            
+        <div style={{ height: "75vh", paddingTop: "80px"}} className="container valign-wrapper">
+            <Navigation/>
+            <Row>
+                <Col md={6}>
+                    <h3>Upload file on cloud:</h3><br/>
+                    <Form noValidate onSubmit={this.onUpload}>
+                        <Form.Group>
+                            <Form.Label>Filename</Form.Label>
+                            <Form.Control type="file" onChange={this.onFileChange} name= "filename" variant="info"></Form.Control>
+                        </Form.Group>
+                        <Form.Group>
+                            <Row>
+                                <Col xs={2}><Button className="pull-left" type="submit" size="md" variant="info">Upload</Button></Col>
+                                <Col xs={2}><Button className="pull-right" size="md" variant="secondary" onClick={this.handleCancelEvent}>Cancel</Button></Col>
+                            </Row>
+                        </Form.Group>
+                    </Form>
+                </Col>
+                <Col md={6}>
+                <Table>
+                    <thead variant="info">
+                        <tr><th>ID</th><th>Name</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        {this.props.cloud.files.map(file =>(
+                            <tr>
+                                <td>{file.id}</td>
+                                <td>{file.name}</td>
+                                <td><Button variant="info" onClick={this.openModal} value={[file.id, file.name]}>Share</Button></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+                </Col>
+            </Row>                        
             <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Share File</Modal.Title>
@@ -102,7 +109,7 @@ class Gdrive extends Component {
                     <Form.Label>Email:</Form.Label>
                     <Form.Control type="text" id="receiverEmail" name="receiverEmail" value={this.state.receiverEmail} onChange={this.emailChangeEvent}></Form.Control>
                     </Form.Group>
-                    <Button type="submit">Submit</Button>
+                    <Button variant="info" type="submit">Submit</Button>
                 </Form>
                 </Modal.Body> 
             </Modal>

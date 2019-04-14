@@ -24,6 +24,7 @@ app.use(morgan('dev'));
 
 
 const gdriveRoute = require('./api/routes/gdrive.js');
+const mboxRoute = require('./api/routes/mbox.js');
 const userRoute = require('./api/routes/user.js');
 const checkAuth = require('./api/middleware/check-auth.js');
 const notificationRoute = require('./api/routes/notifications.js');
@@ -33,6 +34,7 @@ app.get('/*', function(req, res){
 })
 
 app.use('/gdrive', checkAuth, gdriveRoute);
+app.use('/mbox', mboxRoute);
 app.use('/user', userRoute);
 app.use('/notifications', checkAuth, notificationRoute);
 

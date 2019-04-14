@@ -19,6 +19,7 @@ newcurve = default_curve()
 params = UmbralParameters(curve=newcurve)
 
 capsule = pre.Capsule.from_bytes(keys_dict['capsule'].encode('cp855'), params)
+print(vars(capsule))
 
 sender_signer = signing.Signer(private_key=keys_dict['signingkey'])
 kfrags = pre.generate_kfrags(delegating_privkey=keys_dict['privatekey'],
@@ -27,28 +28,34 @@ kfrags = pre.generate_kfrags(delegating_privkey=keys_dict['privatekey'],
                              threshold=10,
                              N=20)
 
+print(kfrags)
+
 capsule.set_correctness_keys(delegating=keys_dict['senderpublickey'],
                              receiving=keys_dict['publickey'],
                              verifying=keys_dict['verificationkey'])
 
+print(vars(capsule))
 cfrags = list()           # Bob's cfrag collection
 for kfrag in kfrags[:10]:
   cfrag = pre.reencrypt(kfrag=kfrag, capsule=capsule)
   cfrags.append(cfrag)    # Bob collects a cfrag
 
+print(cfrags)
+print(str(keys_dict['sharefilename'].split('.')[-1]))
+print(keys_dict['ciphertext'].encode('cp855'))
 for cfrag in cfrags:
   capsule.attach_cfrag(cfrag)
 
-print(capsule)
-print(keys_dict['ciphertext'])
-print(type(keys_dict['ciphertext']))
 cipher_byte = keys_dict['ciphertext'].encode('cp855')
+
+print(vars(capsule))
 print(cipher_byte)
 bob_cleartext = pre.decrypt(ciphertext=cipher_byte, capsule=capsule, decrypting_key=keys_dict['receiverprivatekey'])
 
 print(bob_cleartext)
-print(type(bob_cleartext))
+path = "/home/anmolmiddha/Projects/coreshare/server/tempshare/gdrive/input." + str(keys_dict['sharefilename'].split('.')[-1])
+print(path)
 
-wf = open("/home/anmolmiddha/Projects/coreshare/server/tempshare/gdrive/input.txt", "wb")
+wf = open(path, "wb+")
 wf.write(bob_cleartext)
 wf.close()
