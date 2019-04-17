@@ -12,6 +12,7 @@ constructor() {
   this.state = {
     nemail: "",
     npassword: "",
+    nuname: "",
     modalIsOpen: false,
     isRegistered: false,
     errors: {}
@@ -43,6 +44,7 @@ handleChangeEvent(e){
 onSubmit(e){
   e.preventDefault();
   const newUser = {
+    username: this.state.nuname,
     email: this.state.nemail,
     password: this.state.npassword,
   };
@@ -102,6 +104,10 @@ render(){
           </Modal.Header>
           <Modal.Body>
             <Form noValidate onSubmit = {this.onSubmit}>
+              <Form.Group>
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="text" id="nuname" name="nuname" value={this.state.nuname} onChange={this.handleChangeEvent}></Form.Control>
+              </Form.Group>
               <Form.Group>
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="text" id="nemail" name="nemail" value={this.state.nemail} onChange={this.handleChangeEvent}></Form.Control>

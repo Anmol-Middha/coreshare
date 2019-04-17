@@ -17,7 +17,7 @@ router.post('/', (req, res, next)=>{
     });
     dbx.filesListFolder({path: ''})
     .then(function(response) {
-        console.log(response);
+        res.send(response.entries);
     })
     .catch(function(error) {
         console.log(error);

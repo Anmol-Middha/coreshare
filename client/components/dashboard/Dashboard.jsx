@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {Button, Form, Row, Col} from 'react-bootstrap';
+import {Button, Form, Row, Col, Container, Nav} from 'react-bootstrap';
 import {connect} from "react-redux";
 import {syncCloud} from "./../../actions/cloudActions.js";
 import Navigation from "../layout/Navigation.jsx";
@@ -33,7 +33,7 @@ class Dashboard extends Component {
       <Navigation/>
         <div className = "row">
               <Form noValidate onSubmit = {this.onSubmit}>
-              <Form.Label>Select Cloud</Form.Label>
+              <Form.Label><h3>Select Cloud</h3></Form.Label>
               <Row>
               <Col xs={12}>
               <Form.Control as="select" size="sm" onChange={this.onOptionSelect} value={this.state.cloudType}>

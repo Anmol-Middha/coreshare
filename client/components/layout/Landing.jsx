@@ -1,7 +1,7 @@
 import React from "react";
 import Login from './../auth/Login.jsx';
 import Register from './../auth/Register.jsx';
-import { Button, Navbar, Nav, NavDropdown} from 'react-bootstrap';
+import {Navbar, Nav} from 'react-bootstrap';
 
 
 class Landing extends React.Component {

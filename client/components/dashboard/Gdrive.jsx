@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {Modal, Form, Button, Table, Row, Col} from 'react-bootstrap';
+import {Modal, Form, Button, Row, Col, Card, Nav, Navbar, Container, Jumbotron} from 'react-bootstrap';
 import {connect} from "react-redux";
 import Navigation from "./../layout/Navigation.jsx";
 import {syncCloud, uploadFile, shareFile} from "./../../actions/cloudActions.js";
 import store from '../../store';
+import gdriveimage from '../../images/gdrive.png';
+import mboximage from '../../images/dropbox.png';
 
 class Gdrive extends Component {
     constructor(){
         super();
         this.state={
             file: null,
+            cloudLogo: "",
             modalIsOpen: false,
             receiverEmail:"",
             sharingFile: [],
@@ -23,6 +26,21 @@ class Gdrive extends Component {
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.onShare = this.onShare.bind(this);
+    }
+    componentDidMount(){
+        const cloudtype = this.props.cloud.type;
+        if(cloudtype == "Google Drive"){
+            this.setState({
+                cloudLogo: gdriveimage
+            })
+            console.log(this.state.cloudLogo);
+        }
+        else if(cloudtype == "Dropbox"){
+            this.setState({
+                cloudLogo: mboximage
+            })
+            console.log(this.state.cloudLogo);
+        }
     }
     onFileChange(e){
         this.setState({
@@ -67,36 +85,50 @@ class Gdrive extends Component {
         <div style={{ height: "75vh", paddingTop: "80px"}} className="container valign-wrapper">
             <Navigation/>
             <Row>
-                <Col md={6}>
+                <Col md={4}>
                     <h3>Upload file on cloud:</h3><br/>
                     <Form noValidate onSubmit={this.onUpload}>
                         <Form.Group>
                             <Form.Label>Filename</Form.Label>
-                            <Form.Control type="file" onChange={this.onFileChange} name= "filename" variant="info"></Form.Control>
+                            <Form.Control type="file" onChange={this.onFileChange} name= "filename"></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Row>
-                                <Col xs={2}><Button className="pull-left" type="submit" size="md" variant="info">Upload</Button></Col>
-                                <Col xs={2}><Button className="pull-right" size="md" variant="secondary" onClick={this.handleCancelEvent}>Cancel</Button></Col>
+                                <Col xs={2}><Button type="submit" size="md" variant="info">Upload</Button></Col>
+                                <Col xs={{span: '2', offset: '1'}}><Button size="md" variant="secondary" onClick={this.handleCancelEvent}>Cancel</Button></Col>
                             </Row>
                         </Form.Group>
                     </Form>
                 </Col>
-                <Col md={6}>
-                <Table>
-                    <thead variant="info">
-                        <tr><th>ID</th><th>Name</th><th></th></tr>
-                    </thead>
-                    <tbody>
-                        {this.props.cloud.files.map(file =>(
-                            <tr>
-                                <td>{file.id}</td>
-                                <td>{file.name}</td>
-                                <td><Button variant="info" onClick={this.openModal} value={[file.id, file.name]}>Share</Button></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <Col md={8}>
+                <Card style={{height: '540px'}}>
+                    <Card.Header style={{textAlign: "center"}}>  
+                        {console.log(this.state.cloudLogo)}
+                        {console.log(mboximage)}                          
+                        {console.log(typeof(this.state.cloudLogo))}
+                        <h3><img src={this.state.cloudLogo}></img>&nbsp;{this.props.cloud.type}</h3>
+                    </Card.Header>
+                    <Card.Body style={{overflowY: 'scroll', backgroundColor: '#eee'}}>
+                    <Row>
+                    {this.props.cloud.files.map(file => (
+                        <Col sm={4} style={{padding: '10px'}}>
+                        <Card>
+                        <Card.Header style={{textAlign: 'center'}}><FontAwesomeIcon style={{fontSize: '80px', color: '#428bca'}} icon="file"></FontAwesomeIcon></Card.Header>  
+                        <Card.Body>
+                            <Row>
+                            <Col xs={12}><Card.Subtitle className="mb-2">{file.name}</Card.Subtitle></Col>
+                            </Row>
+                            <Row>
+                                <Col xs={4}><Button size="sm" variant="secondary" onClick={this.openModal} value={[file.id, file.name]}>Share</Button></Col>
+                                <Col xs={4}><Button size="sm" variant="secondary" >Delete</Button></Col>
+                            </Row>
+                        </Card.Body>                      
+                        </Card>
+                        </Col>
+                    ))}
+                    </Row>
+                    </Card.Body>
+                </Card>
                 </Col>
             </Row>                        
             <Modal show={this.state.modalIsOpen} onHide={this.closeModal}>

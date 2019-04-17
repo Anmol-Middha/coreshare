@@ -8,7 +8,6 @@ const GenerateKey = require('../middleware/generatekey');
 const User = require('../../../models/user.js');
 
 router.post('/signup',  GenerateKey, (req,res) =>{
-    console.log(req.keys);
     const keys = JSON.parse(req.keys);
     
     bcrypt.hash(req.body.password, 10, (err, hash)=>{
@@ -21,6 +20,7 @@ router.post('/signup',  GenerateKey, (req,res) =>{
         else{
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
+                username:req.body.username,
                 emailId: req.body.email,
                 password: hash,
                 privatekey: keys.bprivatekey,
@@ -64,6 +64,7 @@ router.post('/login', (req, res, next)=> {
             if(rslt){
                 const token = jwt.sign({
                     email: user[0].emailId,
+                    username: user[0].username,
                     _id: user[0]._id
                 },
                 process.env.TOKEN_KEY, 

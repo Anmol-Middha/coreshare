@@ -10,7 +10,7 @@ module.exports = ((req, res) => {
     pyshell.send(reencryptkeys);
 
     pyshell.on('message', data =>{
-        console.log(data);
+        // console.log(data);
         req.destpath = data;
     });
 

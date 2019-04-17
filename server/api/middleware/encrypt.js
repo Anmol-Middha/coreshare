@@ -13,7 +13,7 @@ User.find({_id: req.body.uid}).exec()
     pyshell.send(pydata);
     pyshell.on('message', function(data){
         req.capsule = data;
-        console.log(data);
+        // console.log(data);
     })      
     pyshell.end(function (err, rslt) {
         if(err){

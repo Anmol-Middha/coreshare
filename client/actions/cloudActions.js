@@ -6,9 +6,15 @@ export const syncCloud = (cloud, history) => dispatch => {
     const sync_url = '/' + cloud.cloudType;
     axios.post(sync_url)
     .then(rslt=>{
+        if(cloud.cloudType == "gdrive"){
+            cloud.cloudType = "Google Drive";
+        }
+        else if(cloud.cloudType == 'mbox'){
+            cloud.cloudType = "Dropbox";
+        }
         dispatch({
             type: SYNC_CLOUD,
-            payload: rslt.data
+            payload: {"type": cloud.cloudType, "data": rslt.data}
         });
         history.push('/dashboard/gdrive');
     })

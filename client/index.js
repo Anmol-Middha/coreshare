@@ -7,9 +7,9 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faShareSquare } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faShareAltSquare, faTrashAlt, faUserCircle, faBell} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faShareSquare)
+library.add( faFile, faShareAltSquare, faTrashAlt, faUserCircle, faBell)
 
 import PrivateRoute from "./privateroutes";
 import Landing from "./components/layout/Landing.jsx";
