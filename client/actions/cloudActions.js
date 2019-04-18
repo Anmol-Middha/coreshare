@@ -2,9 +2,9 @@ import axios from 'axios';
 import {SYNC_CLOUD, UPLOAD_FILE, GET_ERRORS} from './types.js';
 import store from '../store';
 
-export const syncCloud = (cloud, history) => dispatch => {
+export const syncCloud = (cloud, loginuid, history) => dispatch => {
     const sync_url = '/' + cloud.cloudType;
-    axios.post(sync_url)
+    axios.post(sync_url, {loginuid: loginuid})
     .then(rslt=>{
         if(cloud.cloudType == "gdrive"){
             cloud.cloudType = "Google Drive";

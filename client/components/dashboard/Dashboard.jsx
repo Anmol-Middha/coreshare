@@ -24,7 +24,8 @@ class Dashboard extends Component {
     let cloud = {
       cloudType: this.state.cloudType
     };
-    this.props.syncCloud(cloud, this.props.history);
+    let loginuid = this.props.auth.user._id; 
+    this.props.syncCloud(cloud, loginuid, this.props.history);
   }
   render() {
   const { user } = this.props.auth;

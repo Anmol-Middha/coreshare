@@ -1,6 +1,9 @@
 const fs = require('fs');
 const readline = require('readline');
+const mongoose = require('mongoose');
 const {google} = require('googleapis');
+
+const Gdrive = require('../../../models/gdrive.js');
 
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // The file token.json stores the user's access and refresh tokens, and is
@@ -47,6 +50,8 @@ function getAccessToken(oAuth2Client) {
           if (err) console.error(err);
           console.log('Token stored to', TOKEN_PATH);
         });
+        
+
         req.auth = oAuth2Client;
         next();
       });

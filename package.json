@@ -2,6 +2,7 @@
   "name": "coreshare",
   "version": "1.0.0",
   "description": "",
+  "engine": "10.x",
   "scripts": {
     "webpack": "webpack",
     "start": "npm run webpack && nodemon --exec babel-node bin/www",
