@@ -25,28 +25,24 @@ router.post('/', (req, res, next)=>{
 })
 
 router.post('/upload', (req, res)=>{
-//create session
+    const pathdb = "/" + req.body.filename;
     const dropbox = dropboxV2Api.authenticate({
         token: 'jKuLkh-knBAAAAAAAAAADJDRC9nnNGfeagiXTj0T9DfeQXdwI84tGfI_NjaRZ4-z'
     });
 
-//create upload stream
     const uploadStream = dropbox({
         resource: 'files/upload',
         parameters: {
-            path: '/' + req.body.filename
+            path: pathdb
         }
     }, (err, result) => {
         if(err){
-            console.log(err);
             res.status(500).json(err);
         }
         else{
-            console.log(result);
             res.status(200).json(result);
         }
     });
-    //use nodejs stream
     fs.createReadStream(req.body.destpath).pipe(uploadStream);
 });
 

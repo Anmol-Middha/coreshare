@@ -72,7 +72,7 @@ router.post('/share/:fileId', Authorise, (req, res) =>{
     const fileid = req.params.fileId;
     const sid = req.body.senderId;
     const filename = req.body.filename;
-    
+    console.log(filename);
     User.find({emailId: req.body.receiverEmail},{email: 0, password: 0})
     .exec()
     .then(user =>{

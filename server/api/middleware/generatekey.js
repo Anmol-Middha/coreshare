@@ -1,11 +1,11 @@
 const {PythonShell} = require('python-shell');
+const Path = require('path');
 
 module.exports = function (req, res, next){
 try{
-    let myPythonScriptPath = '/home/anmolmiddha/Projects/coreshare/server/api/python/generatekey.py';
+    let myPythonScriptPath = Path.join(__dirname, '../python/generatekey.py');
     const pyshell = new PythonShell(myPythonScriptPath);
     pyshell.on("message", function(data){
-        // console.log(data);
         req.keys = data
     });
 

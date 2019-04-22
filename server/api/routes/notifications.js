@@ -79,7 +79,6 @@ router.post('/accept', function(req, res, next){
         }
         else{
             const data = file.metadata;
-            // req.filecapsule = data.capsule;
             Capsule.find({_id: data.cloudfileid})
             .exec()
             .then(capsule => {
@@ -88,6 +87,7 @@ router.post('/accept', function(req, res, next){
             })
             .catch(err=>{
                 res.status(500).json(err);
+                console.log(err);
             })
 
             User.find({_id: data.receiver}, {publickey: 1, privatekey: 1})
@@ -97,6 +97,7 @@ router.post('/accept', function(req, res, next){
             })
             .catch(err => {
                 res.status(500).json(err);
+                console.log(err);
             });
 
             User.find({_id: data.sender}, {signingkey: 1, privatekey: 1, publickey: 1, verificationkey: 1})
@@ -111,13 +112,13 @@ router.post('/accept', function(req, res, next){
                 });
                 readstream.on("end", function () {
                    req.ciphertext = chunks;
-                   console.log(req.ciphertext);
-                   console.log(typeof(req.ciphertext));
+                //    console.log(req.ciphertext);
                    next();
                 });
             })
             .catch(err => {
-                res.status(500).json(err);
+                // res.status(500).json(err);
+                console.log(err);
             });   
         }
     });
