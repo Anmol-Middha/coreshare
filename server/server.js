@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const fs = require('fs');
 const gridfs = require('gridfs-stream');
 
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true});
@@ -12,7 +11,6 @@ const app = express();
 gridfs.mongo = mongoose.mongo;
 let conn = mongoose.connection;
 conn.on('error', console.error.bind(console, 'connection error:'));
- 
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../client'));
@@ -20,8 +18,6 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(morgan('dev'));
-
-
 
 const gdriveRoute = require('./api/routes/gdrive.js');
 const mboxRoute = require('./api/routes/mbox.js');
